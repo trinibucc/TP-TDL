@@ -14,6 +14,9 @@ type Cliente struct {
 	Id, Compra int
 }
 
+func obtenerBaseDeDatos() {
+
+}
 func main() {
 
 	menu := `¿Qué deseas hacer?

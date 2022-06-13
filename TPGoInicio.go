@@ -4,7 +4,7 @@ import (
 	"bufio"        // Leer líneas incluso si tienen espacios
 	"database/sql" //Interactuar con bases de datos
 	"fmt"          //Para los mensajes
-	_ "mysql"      // La librería que nos permite conectar a MySQL. Descargada de github.com/go-sql-driver/mysql
+	_ "mysql"      // La librería que nos permite conectar a MySQL. Descargada de github.com/go-sql-driver/mysql (Yo clone el repo)
 	"os"           // El búfer, para leer desde la terminal con os.Stdin
 	"strconv"      //Para conversión
 )
@@ -198,3 +198,11 @@ func obtenerBaseDeDatos() (db *sql.DB, e error) {
 	}
 	return db, nil
 }
+
+/*La parte más importante es en donde hacemos la conexión. Ahí especificamos la contraseña, el host, el usuario y el nombre de la base de datos.
+El host siempre es localhost, pero puede que sea otro, igualmente se puede cambiar el puerto.
+
+Los errores más comunes que pueden aparecer:
+- Cuando especificamos mal la IP o el puerto: Error conectando: dial tcp 127.0.0.1:3306: connectex: No se puede establecer una conexión ya que el equipo de destino denegó expresamente dicha conexión.
+- Si no ponemos el usuario o la contraseña correcta: Error conectando: Error 1044: Access denied for user ”@’localhost’ to database ‘agenda’
+- En caso de que no exista la base de datos: Error conectando: Error 1049: Unknown database ‘agenda’*/

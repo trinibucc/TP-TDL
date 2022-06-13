@@ -1,11 +1,12 @@
 package main
 
 import (
-	"bufio"   // Leer líneas incluso si tienen espacios
-	"fmt"     //Para los mensajes
-	"os"      // El búfer, para leer desde la terminal con os.Stdin
-	"strconv" //Para conversión
-	// "database/sql" Interactuar con bases de datos
+	"bufio"        // Leer líneas incluso si tienen espacios
+	"database/sql" //Interactuar con bases de datos
+	"fmt"          //Para los mensajes
+	_ "mysql"      // La librería que nos permite conectar a MySQL. Descargada de github.com/go-sql-driver/mysql
+	"os"           // El búfer, para leer desde la terminal con os.Stdin
+	"strconv"      //Para conversión
 )
 
 /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¿Podría ser una clase?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
@@ -183,4 +184,17 @@ func actualizar(cliente Cliente) error {
 	_, err = sentenciaAEjecutar.Exec(cliente.Nombre, cliente.Id, cliente.Compra)
 	return err
 
+}
+
+func obtenerBaseDeDatos() (db *sql.DB, e error) {
+	usuario := "root"
+	pass := ""
+	host := "tcp(127.0.0.1:3306)"
+	nombreBaseDeDatos := "Espectadores"
+	// Debe tener la forma usuario:contraseña@host/nombreBaseDeDatos
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@%s/%s", usuario, pass, host, nombreBaseDeDatos))
+	if err != nil {
+		return nil, err
+	}
+	return db, nil
 }

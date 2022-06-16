@@ -9,7 +9,6 @@ import (
 	"strconv"      //Para conversión
 )
 
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~¿Podría ser una clase?~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 type Cliente struct {
 	Nombre     string
 	Id, Compra int

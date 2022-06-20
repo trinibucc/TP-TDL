@@ -52,18 +52,24 @@ func main() {
 			if err != nil {
 				fmt.Printf("Error obteniendo contactos: %v", err)
 			} else {
-				for _, clientes := range clientes {
+
+				for _, cliente := range clientes {
 					fmt.Println("====================")
 					fmt.Printf("Nombre: %s\n", cliente.Nombre)
 					fmt.Printf("Id: %d\n", cliente.Id)
-					fmt.Printf("Id: %d\n", cliente.Compra)
+					fmt.Printf("Compra: %d\n", cliente.Compra)
 				}
 			}
 		case 3:
 			/* ¿El ID al actualizar una compra lo mantenemos o le generamos uno nuevo?
 			Opcion 1 fmt.Println("Ingresa el id:")
 			Opcion 2 generarlo de manera random */
-			fmt.Scanln(&cliente.Id)
+			fmt.Println("Ingrese el ID del comprador:")
+			if scanner.Scan() {
+				idString := scanner.Text()
+				cliente.Id, _ = strconv.Atoi(idString)
+
+			}
 			fmt.Println("Ingresa el nuevo nombre:")
 			if scanner.Scan() {
 				cliente.Nombre = scanner.Text()
@@ -180,7 +186,7 @@ func actualizar(cliente Cliente) error {
 	}
 	defer sentenciaAEjecutar.Close()
 	// Pasar argumentos en el mismo orden que la consulta
-	_, err = sentenciaAEjecutar.Exec(cliente.Nombre, cliente.Id, cliente.Compra)
+	_, err = sentenciaAEjecutar.Exec(cliente.Nombre, cliente.Compra, cliente.Id)
 	return err
 
 }

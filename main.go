@@ -1,8 +1,8 @@
 package main
 
 import (
+	"TP-TDL/estadio"
 	"fmt"
-	"migo/estadio"
 )
 
 func main() {
@@ -14,8 +14,7 @@ func main() {
 	estadioInstancia.AgregarSeccion(seccion)
 
 	menu := `¿Qué deseas hacer?
-			[1] -- Ingresar cantidad de entradas
-		
+			[1] -- Ingrese la cantidad de entradas que desea comprar		
 			[2] -- Salir
 
 			----->	`

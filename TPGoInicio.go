@@ -16,6 +16,7 @@ type Cliente struct {
 
 func main() {
 
+	mostrar := make(chan string)
 	menu := `¿Qué deseas hacer?
 [1] -- Agregar Compra
 [2] -- Mostrar Tabla -> Verificar. 
@@ -48,7 +49,8 @@ func main() {
 				fmt.Println("Insertado correctamente")
 			}
 		case 2:
-			clientes, err := obtenerClientes()
+			go mostrarClientes(mostrar) //Le paso el channel
+			/*clientes, err := obtenerClientes()
 			if err != nil {
 				fmt.Printf("Error obteniendo contactos: %v", err)
 			} else {
@@ -59,7 +61,7 @@ func main() {
 					fmt.Printf("Id: %d\n", cliente.Id)
 					fmt.Printf("Compra: %d\n", cliente.Compra)
 				}
-			}
+			}*/
 		case 3:
 			/* ¿El ID al actualizar una compra lo mantenemos o le generamos uno nuevo?
 			Opcion 1 fmt.Println("Ingresa el id:")
@@ -139,7 +141,23 @@ func insertar(cliente Cliente) (err error) {
 	return nil
 }
 
-func obtenerClientes() ([]Cliente, error) { /*Depende si usamos el struct o la clase de CLIENTE*/
+func mostrarClientes(mostrar chan<- string){
+	clientes, err := obtenerClientes()
+	if err != nil {
+		fmt.Printf("Error obteniendo contactos: %v", err)
+	}
+	select{
+	case result <- response:
+		for _, cliente := range clientes {
+					fmt.Println("====================")
+					fmt.Printf("Nombre: %s\n", cliente.Nombre)
+					fmt.Printf("Id: %d\n", cliente.Id)
+					fmt.Printf("Compra: %d\n", cliente.Compra)
+	}
+}
+
+
+func obtenerClientes() ([]Cliente, error) { //Depende si usamos el struct o la clase de CLIENTE
 	clientes := []Cliente{} //Areglo de clientes
 	db, err := obtenerBaseDeDatos()
 	if err != nil {

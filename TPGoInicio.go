@@ -14,9 +14,11 @@ type Cliente struct {
 	Id, Compra int
 }
 
+var clientes = make([]Cliente, 0)
+
 func main() {
 
-	mostrar := make(chan string)
+	mostrar := make(chan Cliente)
 	menu := `¿Qué deseas hacer?
 [1] -- Agregar Compra
 [2] -- Mostrar Tabla -> Verificar. 
@@ -49,7 +51,8 @@ func main() {
 				fmt.Println("Insertado correctamente")
 			}
 		case 2:
-			go mostrarClientes(mostrar) //Le paso el channel
+			go obtenerClientes(mostrar)
+			mostrarClientes(mostrar) //Le paso el channel
 			/*clientes, err := obtenerClientes()
 			if err != nil {
 				fmt.Printf("Error obteniendo contactos: %v", err)
@@ -141,34 +144,28 @@ func insertar(cliente Cliente) (err error) {
 	return nil
 }
 
-func mostrarClientes(mostrar chan<- string){
-	clientes, err := obtenerClientes()
-	if err != nil {
-		fmt.Printf("Error obteniendo contactos: %v", err)
-	}
-	select{
-	case result <- response:
-		for _, cliente := range clientes {
-					fmt.Println("====================")
-					fmt.Printf("Nombre: %s\n", cliente.Nombre)
-					fmt.Printf("Id: %d\n", cliente.Id)
-					fmt.Printf("Compra: %d\n", cliente.Compra)
-	}
+func mostrarClientes(mostrar chan Cliente) {
+
+	//for _, clientes1 := range clientes {
+	//fmt.Println("====================")
+	fmt.Printf("%v", <-mostrar)
+	//fmt.Printf("%v", clientes1)
+	//}
+
 }
 
-
-func obtenerClientes() ([]Cliente, error) { //Depende si usamos el struct o la clase de CLIENTE
-	clientes := []Cliente{} //Areglo de clientes
+func obtenerClientes(mostrar chan Cliente) []Cliente { //Depende si usamos el struct o la clase de CLIENTE
+	//Areglo de clientes
 	db, err := obtenerBaseDeDatos()
 	if err != nil {
-		return nil, err
+
 	}
 	defer db.Close()
 	filas, err := db.Query("SELECT Id, Nombre, Compra FROM Compradores")
 
-	if err != nil {
+	/*	if err != nil {
 		return nil, err
-	}
+	}*/
 
 	defer filas.Close()
 
@@ -179,14 +176,14 @@ func obtenerClientes() ([]Cliente, error) { //Depende si usamos el struct o la c
 	for filas.Next() {
 		err = filas.Scan(&cliente.Id, &cliente.Nombre, &cliente.Compra)
 		// Verificamos si tenemos algun error
-		if err != nil {
+		/*if err != nil {
 			return nil, err
-		}
-
+		}*/
+		mostrar <- cliente
 		clientes = append(clientes, cliente)
 	}
 
-	return clientes, nil
+	return clientes
 }
 
 func actualizar(cliente Cliente) error {
